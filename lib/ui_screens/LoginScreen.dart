@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:device_management_app/data_base/Database.dart';
+import 'package:device_management_app/model/User.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,11 +41,16 @@ class _LoginPageState extends State<LoginScreen> {
             emailController.text +
             "password:- " +
             passwordController.text);
-        return true;
+        User tempUser = await DBProvider.db.getUser(emailController.text);
+        if (tempUser != null &&
+            tempUser.emailId == emailController.text &&
+            tempUser.password == passwordController.text) return true;
       }
     } else {
-      //check from data base
-      return true;
+      User tempUser = await DBProvider.db.getUser(emailController.text);
+      if (tempUser != null &&
+          tempUser.emailId == emailController.text &&
+          tempUser.password == passwordController.text) return true;
     }
     return false;
   }

@@ -1,3 +1,6 @@
+import 'package:device_management_app/data_base/Database.dart';
+import 'package:device_management_app/model/Address.dart';
+import 'package:device_management_app/model/Globals.dart' as Globals;
 import 'package:flutter/material.dart';
 
 class AddressScreen extends StatefulWidget {
@@ -8,11 +11,21 @@ class AddressScreen extends StatefulWidget {
 }
 
 class _AddressPageState extends State<AddressScreen> {
+  TextEditingController houseNumberController = new TextEditingController();
+  TextEditingController streetNameController = new TextEditingController();
+  TextEditingController cityController = new TextEditingController();
+  TextEditingController stateController = new TextEditingController();
+  TextEditingController countryController = new TextEditingController();
+  TextEditingController pinCodeController = new TextEditingController();
+
   @override
   Widget build(BuildContext context) {
+    //TextEditingController mobileNoController = new TextEditingController();
+
     final houseNumber = TextFormField(
       keyboardType: TextInputType.number,
       autofocus: false,
+      controller: houseNumberController,
       decoration: InputDecoration(
         hintText: 'House/Flat No.',
         labelText: 'House/Flat No.',
@@ -24,6 +37,7 @@ class _AddressPageState extends State<AddressScreen> {
       autofocus: false,
       obscureText: false,
       keyboardType: TextInputType.text,
+      controller: streetNameController,
       decoration: InputDecoration(
         hintText: 'Street name',
         labelText: 'Street name',
@@ -34,6 +48,7 @@ class _AddressPageState extends State<AddressScreen> {
       autofocus: false,
       obscureText: false,
       keyboardType: TextInputType.text,
+      controller: cityController,
       decoration: InputDecoration(
         hintText: 'City',
         labelText: 'City',
@@ -44,6 +59,7 @@ class _AddressPageState extends State<AddressScreen> {
       autofocus: false,
       obscureText: false,
       keyboardType: TextInputType.text,
+      controller: stateController,
       decoration: InputDecoration(
         hintText: 'State',
         labelText: 'State',
@@ -54,6 +70,7 @@ class _AddressPageState extends State<AddressScreen> {
       autofocus: false,
       obscureText: false,
       keyboardType: TextInputType.text,
+      controller: pinCodeController,
       decoration: InputDecoration(
         hintText: 'Pin code',
         labelText: 'Pin code',
@@ -64,6 +81,7 @@ class _AddressPageState extends State<AddressScreen> {
       autofocus: false,
       obscureText: false,
       keyboardType: TextInputType.text,
+      controller: countryController,
       decoration: InputDecoration(
         hintText: 'Country',
         labelText: 'Country',
@@ -126,5 +144,21 @@ class _AddressPageState extends State<AddressScreen> {
         ),
       ),
     );
+  }
+
+  Future<bool> saveDataInDatabase() async {
+    Address newUser = Address(
+        emailId: Globals.emailID,
+        houseNumber: houseNumberController.text,
+        streetName: streetNameController.text,
+        city: cityController.text,
+        state: stateController.text,
+        country: countryController.text,
+        pinCode: pinCodeController.text);
+
+    await DBProvider.db.newAddress(newUser);
+
+    setState(() {});
+    return true;
   }
 }

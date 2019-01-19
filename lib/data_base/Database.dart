@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:device_management_app/model/Address.dart';
 import 'package:device_management_app/model/User.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
@@ -26,29 +27,73 @@ class DBProvider {
     String path = join(documentsDirectory.path, "DeviceDB.db");
     return await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
-      await db.execute("CREATE TABLE Registration ("
-          "id INTEGER PRIMARY KEY,"
+          await db.execute("CREATE TABLE User ("
+              "id INTEGER autoincrement,"
           "user_name TEXT,"
           "full_name TEXT,"
-          "email_id TEXT,"
+              "email_id TEXT PRIMARY KEY,"
           "mobile_number TEXT,"
           "password TEXT,"
-          "disabled BIT"
+              "disabled Text"
+              ")");
+          await db.execute("CREATE TABLE Address ("
+              "email_id TEXT PRIMARY KEY,"
+              "house_number TEXT ,"
+              "street_name TEXT,"
+              "city TEXT,"
+              "state TEXT,"
+              "country Text"
+              "pin_code Text"
           ")");
     });
+  }
+
+  newAddress(Address newAddress) async {
+    final db = await database;
+    var raw = await db.rawInsert(
+        "INSERT Into Address (email_id,house_number,street_name,city,state,country,pin_code)"
+            " VALUES (?,?,?,?,?,?,?)",
+        [
+          newAddress.emailId,
+          newAddress.houseNumber,
+          newAddress.streetName,
+          newAddress.city,
+          newAddress.state,
+          newAddress.country,
+          newAddress.pinCode
+        ]);
+    return raw;
+  }
+
+  updateAddress(Address newAddress) async {
+    final db = await database;
+    var res = await db.update("Address", newAddress.toJson(),
+        where: "email_id = ?", whereArgs: [newAddress.emailId]);
+    return res;
+  }
+
+  deleteAddress(String emailId) async {
+    final db = await database;
+    return db.delete("Address", where: "email_id = ?", whereArgs: [emailId]);
+  }
+
+  getAddress(String emailId) async {
+    final db = await database;
+    var res =
+    await db.query("Address", where: "email_id = ?", whereArgs: [emailId]);
+    return res.isNotEmpty ? Address.fromJson(res.first) : null;
   }
 
   newUser(User newUser) async {
     final db = await database;
     //get the biggest id in the table
-    var table = await db.rawQuery("SELECT MAX(id)+1 as id FROM User");
-    int id = table.first["id"];
-    //insert to the table using the new id
+//    var table = await db.rawQuery("SELECT MAX(id)+1 as id FROM User");
+//    int id = table.first["id"];
+//    //insert to the table using the new id
     var raw = await db.rawInsert(
-        "INSERT Into User (id,user_name,full_name,email_id,mobile_number,password,disabled)"
-        " VALUES (?,?,?,?,?,?,?)",
+        "INSERT Into User (user_name,full_name,email_id,mobile_number,password,disabled)"
+            " VALUES (?,?,?,?,?,?)",
         [
-          id,
           newUser.userName,
           newUser.fullName,
           newUser.emailId,
@@ -68,7 +113,7 @@ class DBProvider {
         emailId: user.emailId,
         mobileNumber: user.mobileNumber,
         password: user.password,
-        disabled: !user.disabled);
+        disabled: user.disabled);
 
     var res = await db.update("User", disabled.toJson(),
         where: "id = ?", whereArgs: [user.id]);
@@ -82,9 +127,9 @@ class DBProvider {
     return res;
   }
 
-  getUser(int id) async {
+  getUser(String id) async {
     final db = await database;
-    var res = await db.query("User", where: "id = ?", whereArgs: [id]);
+    var res = await db.query("User", where: "email_id = ?", whereArgs: [id]);
     return res.isNotEmpty ? User.fromJson(res.first) : null;
   }
 
@@ -108,9 +153,9 @@ class DBProvider {
     return list;
   }
 
-  deleteUser(int id) async {
+  deleteUser(String id) async {
     final db = await database;
-    return db.delete("User", where: "id = ?", whereArgs: [id]);
+    return db.delete("User", where: "email_id = ?", whereArgs: [id]);
   }
 
   deleteAll() async {

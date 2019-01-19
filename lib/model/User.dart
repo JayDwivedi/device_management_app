@@ -17,7 +17,7 @@ class User {
   String emailId;
   String mobileNumber;
   String password;
-  bool disabled;
+  String disabled;
 
   User({
     this.id,

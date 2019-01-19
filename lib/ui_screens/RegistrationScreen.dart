@@ -1,4 +1,5 @@
 import 'package:device_management_app/data_base/Database.dart';
+import 'package:device_management_app/model/Globals.dart' as Globals;
 import 'package:device_management_app/model/User.dart';
 import 'package:flutter/material.dart';
 
@@ -12,6 +13,8 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationPageState extends State<RegistrationScreen> {
+
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   bool _autoValidate = false;
 
@@ -210,6 +213,7 @@ class _RegistrationPageState extends State<RegistrationScreen> {
       _formKey.currentState.save();
       saveDataInDatabase().then((onValue) {
         if (onValue)
+          Globals.emailID = emailIdController.text;
           Navigator.of(context).pushReplacementNamed('/AddressScreen');
       });
     } else {
@@ -227,7 +231,7 @@ class _RegistrationPageState extends State<RegistrationScreen> {
         emailId: emailIdController.text,
         mobileNumber: mobileNoController.text,
         password: confirmPasswordController.text,
-        disabled: false);
+        disabled: "false");
 
     await DBProvider.db.newUser(newUser);
 

@@ -1,0 +1,3 @@
+library Globals;
+
+String emailID;
