@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:device_management_app/model/Device.dart';
 import 'package:device_management_app/ui_screens/LoginScreen.dart';
+import 'package:flutter/material.dart';
 
 class DeviceListPage extends StatefulWidget {
   DeviceListPage({Key key, this.title}) : super(key: key);
@@ -24,6 +24,7 @@ class _DeviceListPageState extends State<DeviceListPage> {
   @override
   Widget build(BuildContext context) {
     ListTile makeListTile(Device device) => ListTile(
+
           contentPadding:
               EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
           leading: Container(
@@ -84,8 +85,8 @@ class _DeviceListPageState extends State<DeviceListPage> {
         );
 
     Card makeCard(Device device) => Card(
-          elevation: 8.0,
-          margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 6.0),
+      elevation: 4.0,
+      margin: new EdgeInsets.symmetric(horizontal: 10.0, vertical: 2.0),
           child: Container(
             decoration: BoxDecoration(color: Color.fromRGBO(64, 75, 96, .9)),
             child: makeListTile(device),
@@ -93,8 +94,9 @@ class _DeviceListPageState extends State<DeviceListPage> {
         );
 
     final makeBody = Container(
-      // decoration: BoxDecoration(color: Color.fromRGBO(58, 66, 86, 1.0)),
+      decoration: BoxDecoration(color: Colors.white),
       child: ListView.builder(
+
         scrollDirection: Axis.vertical,
         shrinkWrap: true,
         itemCount: devices.length,
@@ -104,56 +106,12 @@ class _DeviceListPageState extends State<DeviceListPage> {
       ),
     );
 
-    final makeBottom = Container(
-      height: 55.0,
-      child: BottomAppBar(
-        color: Color.fromRGBO(58, 66, 86, 1.0),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: <Widget>[
-            IconButton(
-              icon: Icon(Icons.home, color: Colors.white),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: Icon(Icons.assignment_ind, color: Colors.white),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: Icon(Icons.store, color: Colors.white),
-              onPressed: () {},
-            ),
-            IconButton(
-              icon: Icon(Icons.settings, color: Colors.white),
-              onPressed: () {},
-            )
-          ],
-        ),
-      ),
-    );
 
-    final topAppBar = AppBar(
-      elevation: 0.1,
-      backgroundColor: Colors.lightBlue,
-      title: Text(widget.title),
-      actions: <Widget>[
-        IconButton(
-          icon: Icon(Icons.bookmark),
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: Icon(Icons.add_to_queue),
-          onPressed: () {},
-        )
-      ],
-    );
+    return makeBody;
 
-    return Scaffold(
-      backgroundColor: Color.fromRGBO(58, 66, 86, 1.0),
-      appBar: topAppBar,
-      body: makeBody,
-      bottomNavigationBar: makeBottom,
-    );
+
+
+
   }
 }
 

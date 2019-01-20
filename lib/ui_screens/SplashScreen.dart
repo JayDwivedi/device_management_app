@@ -1,7 +1,10 @@
 import 'dart:async';
 
+import 'package:device_management_app/data_base/Database.dart';
+import 'package:device_management_app/model/User.dart';
 import 'package:device_management_app/ui_screens/HomeScreen.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import './AddressScreen.dart';
 import './LoginScreen.dart';
@@ -19,7 +22,7 @@ void main() {
   ));
 }
 
-bool isLogin = true;
+bool isLogined = false;
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -32,11 +35,25 @@ class _SplashScreenState extends State<SplashScreen> {
     return new Timer(_duration, navigationPage);
   }
 
-  void navigationPage() {
-    if (isLogin)
-      Navigator.of(context).pushReplacementNamed('/LoginScreen');
-    else
+  void navigationPage() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    if (prefs
+        .getKeys()
+        .length > 0) {
+      User tempUser = await DBProvider.db.getUser(prefs.getString("id"));
+
+      if (tempUser != null && tempUser.password == prefs.getString("pass")) {
+        setState(() {
+          isLogined = true;
+        });
+      }
+    }
+
+    if (isLogined)
       Navigator.of(context).pushReplacementNamed('/HomeScreen');
+    else
+      Navigator.of(context).pushReplacementNamed('/LoginScreen');
   }
 
   @override

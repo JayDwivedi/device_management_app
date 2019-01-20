@@ -11,7 +11,6 @@ String userToJson(User data) {
 }
 
 class User {
-  int id;
   String userName;
   String fullName;
   String emailId;
@@ -20,7 +19,6 @@ class User {
   String disabled;
 
   User({
-    this.id,
     this.userName,
     this.fullName,
     this.emailId,
@@ -30,7 +28,6 @@ class User {
   });
 
   factory User.fromJson(Map<String, dynamic> json) => new User(
-        id: json["id"],
         userName: json["user_name"],
         fullName: json["full_name"],
         emailId: json["email_id"],
@@ -40,7 +37,6 @@ class User {
       );
 
   Map<String, dynamic> toJson() => {
-        "id": id,
         "user_name": userName,
         "full_name": fullName,
         "email_id": emailId,

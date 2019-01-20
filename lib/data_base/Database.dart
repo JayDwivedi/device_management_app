@@ -28,7 +28,6 @@ class DBProvider {
     return await openDatabase(path, version: 1, onOpen: (db) {},
         onCreate: (Database db, int version) async {
           await db.execute("CREATE TABLE User ("
-              "id INTEGER autoincrement,"
           "user_name TEXT,"
           "full_name TEXT,"
               "email_id TEXT PRIMARY KEY,"
@@ -107,7 +106,6 @@ class DBProvider {
   enableOrDisable(User user) async {
     final db = await database;
     User disabled = User(
-        id: user.id,
         userName: user.userName,
         fullName: user.fullName,
         emailId: user.emailId,
@@ -116,14 +114,14 @@ class DBProvider {
         disabled: user.disabled);
 
     var res = await db.update("User", disabled.toJson(),
-        where: "id = ?", whereArgs: [user.id]);
+        where: "email_id = ?", whereArgs: [user.emailId]);
     return res;
   }
 
   updateUser(User newUser) async {
     final db = await database;
     var res = await db.update("User", newUser.toJson(),
-        where: "id = ?", whereArgs: [newUser.id]);
+        where: "email_id = ?", whereArgs: [newUser.emailId]);
     return res;
   }
 
